@@ -2,7 +2,7 @@ console.log("Hello");
 
 let tableElement = document.querySelector("table");
 let tableArray = [];
-const things = ["1","2","3","4","5","6","7","8","9"];
+const defaultNumbers = ["1","2","3","4","5","6","7","8","9"];
 
 function updateTableData()
 {
@@ -15,29 +15,35 @@ function updateTableData()
     }
 }
 
+/**
+ * Checks for a single possibility in an array of possibilities and returns the index and the value
+ * @param {*} array 
+ * @returns 
+ */
 function checkSinglePossibilityInArray(array)
 {
-    for (let i of things)
+    for (let i of defaultNumbers)
+    {
+        if (array.includes(i)) continue;
+        occurences = []
+        for (let j=0; j<array.length;j++)
         {
-            occurences = []
-            for (let j=0; j<array.length;j++)
+            if (Array.isArray(array[j]) && array[j].includes(i))
             {
-                if (Array.isArray(array[j]) && array[j].includes(i))
-                {
-                    occurences.push(j);
-                }
-                else if (typeof array[j] === 'string' && array[j].includes(i))
-                {
-                    continue;
-                }
+                occurences.push(j);
             }
-            console.log(`Occurences of ${i} in array: ${occurences}`);
-            if (occurences.length==1)
+            else if (typeof array[j] === 'string' && array[j].includes(i))
             {
-                console.log(`Found 1 occurence in possibilities: ${i} at ${occurences[0]}`);
-                return {index:occurences[0],thing:i};
+                continue;
             }
         }
+        console.log(`Occurences of ${i} in array: ${occurences}`);
+        if (occurences.length==1)
+        {
+            console.log(`Found 1 occurence in possibilities: ${i} at ${occurences[0]}`);
+            return {index:occurences[0],value:i};
+        }
+    }
 }
 
 function solveSudoku()
@@ -53,7 +59,7 @@ function solveSudoku()
             {
                 // Check row
                 const row = tableArray[y];
-                possibilities = things.filter(a => !row.includes(a));
+                possibilities = defaultNumbers.filter(a => !row.includes(a));
                 
                 // Check column
                 const column = tableArray.map(row => row[x]);
@@ -88,7 +94,7 @@ function solveSudoku()
         const result = checkSinglePossibilityInArray(row);
         if (result)
         {
-            addSolvedSquare(y, result.index, result.thing);
+            addSolvedSquare(y, result.index, result.value);
         }
     }
 
@@ -99,7 +105,7 @@ function solveSudoku()
         const result = checkSinglePossibilityInArray(column);
         if (result)
         {
-            addSolvedSquare(result.index, x, result.thing);
+            addSolvedSquare(result.index, x, result.value);
         }
     }
 
@@ -112,7 +118,7 @@ function solveSudoku()
             const result = checkSinglePossibilityInArray(box);
             if (result)
             {
-                addSolvedSquare(y+Math.floor(result.index/3), x+result.index%3, result.thing);
+                addSolvedSquare(y+Math.floor(result.index/3), x+result.index%3, result.value);
             }
         }
     }
@@ -123,4 +129,5 @@ function addSolvedSquare(y, x, value)
     tableElement.rows[y].cells[x].querySelector("input").value = value;
     tableElement.rows[y].cells[x].querySelector("input").style.backgroundColor = "lightgreen";
     tableElement.rows[y].cells[x].querySelector("input").style.color = "darkgrey";
+    tableArray[y][x] = value;
 }
