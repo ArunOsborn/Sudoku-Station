@@ -122,6 +122,35 @@ function solveSudoku()
             }
         }
     }
+
+    // Show possibilities
+    for (let y = 0; y < tableArray.length; y++) {
+        for (let x = 0; x < tableArray[y].length; x++)
+        {
+            if (Array.isArray(tableArray[y][x]))
+            {
+                const possibilities = tableArray[y][x];
+                for (let num of defaultNumbers)
+                {
+                    if (possibilities.includes(num))
+                    {
+                        document.getElementById(`${x}${y}${num}`).textContent = num;
+                    }
+                    else
+                    {
+                        document.getElementById(`${x}${y}${num}`).textContent = "";
+                    }
+                }
+            }
+            else
+            {
+                for (let num of defaultNumbers)
+                {
+                    document.getElementById(`${x}${y}${num}`).textContent = "";
+                }
+            }
+        }
+    }
 }
 
 function addSolvedSquare(y, x, value)
