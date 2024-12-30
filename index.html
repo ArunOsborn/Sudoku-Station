@@ -4,6 +4,10 @@
     <title>Sudoku Board</title>
     <script defer src="solver.js"></script>
     <style>
+        body
+        {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
         h1
         {
             text-align: center;
@@ -14,8 +18,9 @@
             margin: 50px auto;
         }
         td {
-            width: 30px;
-            height: 30px;
+            width: 32px;
+            height: 32px;
+            padding: 0;
             text-align: center;
             border: 1px solid black;
         }
@@ -31,6 +36,32 @@
             text-align: center;
             font-size: 1.5em;
             border: none;
+            position: relative;
+            z-index: 1;
+            background: none;
+        }
+        input:not(:placeholder-shown) {
+            background-color: rgba(255, 255, 255, 0.568);
+        }
+        .notes-container
+        {
+            font-size: 0.8em;
+            color: grey;
+            position: absolute;
+            user-select: none;
+            width: inherit;
+            height: inherit;
+            display: flex;
+            flex-direction: row;
+            justify-content: space-evenly;
+            flex-wrap: wrap;
+            z-index: 0;
+        }
+        .note-cell
+        {
+            display: inline-block;
+            width: 33%;
+            height: 33%;
         }
         button
         {
@@ -50,7 +81,11 @@
                 const row = document.createElement('tr');
                 for (let j = 0; j < 9; j++) {
                     let cell = document.createElement('td');
-                    cell.innerHTML = `<input value="" />`;
+                    notesInnerHTML = '';
+                    for (let k = 1; k <= 9; k++) {
+                        notesInnerHTML += `<span id="${j}${i}${k}" class="note-cell">${k}</span>`;
+                    }
+                    cell.innerHTML = `<div class="notes-container">${notesInnerHTML}</div><input value="" placeholder="" />`;
                     row.appendChild(cell);
                 }
                 tbody.appendChild(row);
